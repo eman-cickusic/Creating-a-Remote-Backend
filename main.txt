@@ -1,0 +1,27 @@
+provider "google" {
+  project     = var.project_id
+  region      = var.region
+}
+
+resource "google_storage_bucket" "test-bucket-for-state" {
+  name                        = var.bucket_name
+  location                    = "US"  # Replace with EU for Europe region
+  uniform_bucket_level_access = true
+  force_destroy               = false # Set to true when you want to delete the bucket with all its content
+}
+
+terraform {
+  backend "local" {
+    path = "terraform/state/terraform.tfstate"
+  }
+}
+
+# Uncomment the below block and comment out the local backend block above
+# when you want to migrate to a remote backend
+# 
+# terraform {
+#   backend "gcs" {
+#     bucket = "YOUR-BUCKET-NAME"
+#     prefix = "terraform/state"
+#   }
+# }
